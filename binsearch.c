@@ -12,7 +12,13 @@
 #include "util.h"
 
 // TODO: implement
-int serial_binsearch() {
+int serial_binsearch(int arr[], int l, int r, int x) {
+	if(r>=1){
+		int mid = l +(r-l)/2;
+		if(arr[mid])
+		if(arr[mid]>x) return serial_binsearch(arr, l, mid-1, x);
+		return binarySearch(arr, mid+1, r, x)
+	}
     return 0;
 }
 
@@ -24,9 +30,9 @@ int parallel_binsearch() {
 int main(int argc, char** argv) {
     /* TODO: move this time measurement to right before the execution of each binsearch algorithms
      * in your experiment code. It now stands here just for demonstrating time measurement. */
-    char* experiments = NULL;
-    char* time = NULL;
-    char* position = NULL;
+    int experiments = 0 ;
+    int time = 0;
+    int position = 0;
     int c;
     clock_t cbegin = clock();
 
@@ -42,20 +48,30 @@ int main(int argc, char** argv) {
     	switch(c){
     		perror("[datagen] Bind error.\n");
 			case 'T':
-			time = optarg;
-			//printf("%s\n", time);
+			 = atoi(optarg);
+			if(time<3 || time>9){
+				fprintf(stderr, "%s\n", "T must be betweeen 3 and 9");
+				return 0;
+			}
+			
 			case 'E':
-			experiments = optarg;
-			/*printf("%s\n",experiments);*/
+			experiments = atoi(optarg);
+			if(experiments<1){
+				fprintf(stderr, "%s\n","Number of experiments must be greater or equal than 1" );
+				return 0;
+			}
 			case 'P':
-			position = optarg;
-			/*printf("%s\n",position);*/
+			position = atoi(optarg);
+			if(position<0 || position>pow(10, T)-1){
+				fprintf(stderr, "%s\n", "Position must be betweeen 0 and 10^T - 1");
+			}
+			
 
 			
 		
 
     	}
-	printf("%s %s %s\n",time, experiments, position);
+	printf("%d %d %d\n",time, experiments, position);
 
 
     
