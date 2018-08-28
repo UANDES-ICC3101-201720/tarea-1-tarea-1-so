@@ -24,6 +24,10 @@ int parallel_binsearch() {
 int main(int argc, char** argv) {
     /* TODO: move this time measurement to right before the execution of each binsearch algorithms
      * in your experiment code. It now stands here just for demonstrating time measurement. */
+    char* experiments = NULL;
+    char* time = NULL;
+    char* position = NULL;
+    int c;
     clock_t cbegin = clock();
 
     printf("[binsearch] Starting up...\n");
@@ -33,6 +37,28 @@ int main(int argc, char** argv) {
            sysconf(_SC_NPROCESSORS_ONLN));
 
     /* TODO: parse arguments with getopt */
+    
+    while((c = getopt (argc, argv, "T:E:P:")) !=-1)
+    	switch(c){
+    		perror("[datagen] Bind error.\n");
+			case 'T':
+			time = optarg;
+			//printf("%s\n", time);
+			case 'E':
+			experiments = optarg;
+			/*printf("%s\n",experiments);*/
+			case 'P':
+			position = optarg;
+			/*printf("%s\n",position);*/
+
+			
+		
+
+    	}
+	printf("%s %s %s\n",time, experiments, position);
+
+
+    
 
     /* TODO: start datagen here as a child process. */
 
