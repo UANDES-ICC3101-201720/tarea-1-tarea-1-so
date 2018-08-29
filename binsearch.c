@@ -8,6 +8,7 @@
 #include <string.h>
 #include <time.h>
 #include <getopt.h>
+#include <pthread.h>
 #include "types.h"
 #include "const.h"
 #include "util.h"
@@ -25,7 +26,7 @@ int serial_binsearch(int arr[], int l, int r, int x) {
 }
 
 // TODO: implement
-int parallel_binsearch() {
+int parallel_binsearch(void *arg) {
     return 0;
 }
 
@@ -66,11 +67,8 @@ int main(int argc, char** argv) {
 			position = atoi(optarg);
 			if(position<0 || position>pow(10, t)-1){
 				fprintf(stderr, "%s\n", "Position must be betweeen 0 and 10^T - 1");
+				return 0;
 			}
-			
-
-			
-		
 
     	}
 	printf("%d %d %d\n",t, experiments, position);
@@ -94,10 +92,10 @@ int main(int argc, char** argv) {
      * serial and parallel versions of binsearch.
      * */
 	pthread_t serial, parallel;
-	Pthread_create(&serial, NULL, &serial_binsearch, NULL); // El ultimo parametro esta por ver porque son los argumento de la fn
-	Pthread_create(&parallel, NULL, &parallel_binsearch, NULL);//Lo mismo de arriba
-	Pthread_join(serial, NULL);
-	Pthread_join(parallel, NULL);
+	//pthread_create(&serial, NULL, int (&serial_binsearch)(int *, int, int, int), NULL); // El ultimo parametro esta por ver porque son los argumento de la fn
+	pthread_create(&parallel, NULL, int(&parallel_binsearch)(void *), void * arg);//Lo mismo de arriba
+	pthread_join(serial, NULL);
+	pthread_join(parallel, NULL);
     /* TODO: connect to datagen and ask for the necessary data in each experiment round.
      * Create a Unix domain socket with DSOCKET_PATH (see const.h).
      * Talk to datagen using the messages specified in the assignment description document.
