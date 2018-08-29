@@ -6,6 +6,9 @@
 #include <sys/un.h>
 #include <stdbool.h>
 #include <string.h>
+#include <pthread.h>
+#include <assert.h> 
+#include <sched.h>
 #include "types.h"
 #include "const.h"
 

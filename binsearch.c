@@ -93,7 +93,11 @@ int main(int argc, char** argv) {
     /* TODO: implement code for your experiments using data provided by datagen and your
      * serial and parallel versions of binsearch.
      * */
-
+	pthread_t serial, parallel;
+	Pthread_create(&serial, NULL, &serial_binsearch, NULL); // El ultimo parametro esta por ver porque son los argumento de la fn
+	Pthread_create(&serial, NULL, &parallel_binsearch, NULL);//Lo mismo de arriba
+	Pthread_join(serial, NULL);
+	Pthread_join(parallel, NULL)
     /* TODO: connect to datagen and ask for the necessary data in each experiment round.
      * Create a Unix domain socket with DSOCKET_PATH (see const.h).
      * Talk to datagen using the messages specified in the assignment description document.
