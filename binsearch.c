@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 
     /* TODO: parse arguments with getopt */
     
-    while((c = getopt (argc, argv, "T:E:P:")) !=-1)
+    while((c = getopt (argc, argv, "T:E:P:")) !=-1){
     	switch(c){
     		perror("[datagen] Bind error.\n");
 			case 'T':
@@ -69,12 +69,9 @@ int main(int argc, char** argv) {
 				fprintf(stderr, "%s\n", "Position must be betweeen 0 and 10^T - 1");
 				return 0;
 			}
-
     	}
+    }
 	printf("%d %d %d\n",t, experiments, position);
-
-
-    
 
     /* TODO: start datagen here as a child process. */
     int dtgnid = fork();
