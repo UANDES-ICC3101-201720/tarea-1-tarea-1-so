@@ -7,17 +7,19 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
+#include <getopt.h>
 #include "types.h"
 #include "const.h"
 #include "util.h"
+#define _POSIX_C_Source 2
 
 // TODO: implement
 int serial_binsearch(int arr[], int l, int r, int x) {
 	if(r>=1){
 		int mid = l +(r-l)/2;
-		if(arr[mid])
+		if(arr[mid] == x) return mid;
 		if(arr[mid]>x) return serial_binsearch(arr, l, mid-1, x);
-		return binarySearch(arr, mid+1, r, x)
+		return serial_binsearch(arr, mid+1, r, x);
 	}
     return 0;
 }
@@ -31,7 +33,7 @@ int main(int argc, char** argv) {
     /* TODO: move this time measurement to right before the execution of each binsearch algorithms
      * in your experiment code. It now stands here just for demonstrating time measurement. */
     int experiments = 0 ;
-    int time = 0;
+    int t = 0;
     int position = 0;
     int c;
     clock_t cbegin = clock();
@@ -48,8 +50,8 @@ int main(int argc, char** argv) {
     	switch(c){
     		perror("[datagen] Bind error.\n");
 			case 'T':
-			 = atoi(optarg);
-			if(time<3 || time>9){
+			t = atoi(optarg);
+			if(t<3 || t>9){
 				fprintf(stderr, "%s\n", "T must be betweeen 3 and 9");
 				return 0;
 			}
@@ -62,7 +64,7 @@ int main(int argc, char** argv) {
 			}
 			case 'P':
 			position = atoi(optarg);
-			if(position<0 || position>pow(10, T)-1){
+			if(position<0 || position>pow(10, t)-1){
 				fprintf(stderr, "%s\n", "Position must be betweeen 0 and 10^T - 1");
 			}
 			
@@ -71,12 +73,21 @@ int main(int argc, char** argv) {
 		
 
     	}
-	printf("%d %d %d\n",time, experiments, position);
+	printf("%d %d %d\n",t, experiments, position);
 
 
     
 
     /* TODO: start datagen here as a child process. */
+    int dtgnid = fork();
+    
+    if(dtgnid >= 0){
+    	printf("%s%d\n","Datagen PID: ", dtgnid );
+    	execvp("./datagen", &dtgnid);
+    }
+    else if (dtgnid<0){
+    	fprintf(stderr, "%s\n", "Can't create Datagen as ");
+    }
 
     /* TODO: implement code for your experiments using data provided by datagen and your
      * serial and parallel versions of binsearch.
