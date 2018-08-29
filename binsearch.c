@@ -83,7 +83,8 @@ int main(int argc, char** argv) {
     
     if(dtgnid >= 0){
     	printf("%s%d\n","Datagen PID: ", dtgnid );
-    	execvp("./datagen", &dtgnid);
+    	char * name= "./datagen";
+    	execvp(name, &name);
     }
     else if (dtgnid<0){
     	fprintf(stderr, "%s\n", "Can't create Datagen as ");
