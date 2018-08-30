@@ -129,10 +129,10 @@ int main(int argc, char** argv) {
     
     int dtgnid = fork();
     
-    if(dtgnid > 0){
-    	printf("%s%d\n","Datagen PID: ", dtgnid );
+    if(dtgnid == 0){
+    	printf("%s%d\n","Datagen PID: ", getpid());
     	char * name= "./datagen";
-    	//execvp(name, &name);
+    	execvp(name, &name);
     }
     else if (dtgnid<0){
     	fprintf(stderr, "%s\n", "Can't create Datagen as child process");
