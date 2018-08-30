@@ -126,7 +126,7 @@ int main(int argc, char** argv) {
 	printf("%d %d %d\n",t, experiments, position);
 
     /* TODO: start datagen here as a child process. */
-    /*
+    
     int dtgnid = fork();
     
     if(dtgnid > 0){
@@ -137,7 +137,7 @@ int main(int argc, char** argv) {
     else if (dtgnid<0){
     	fprintf(stderr, "%s\n", "Can't create Datagen as child process");
     }
-	*/
+	
     /* TODO: implement code for your experiments using data provided by datagen and your
      * serial and parallel versions of binsearch.
      * */
@@ -149,20 +149,17 @@ int main(int argc, char** argv) {
     }
     prueba.arg1 = arreglo;
     prueba.arg2 = 0;
-<<<<<<< HEAD
     prueba.arg3 =999;
     prueba.arg4 = 708;
-    
     printf("%s: %d\n","Se encuentra en la posicion:",parallel_binsearch(&prueba));
 	pthread_t serial, parallel;
-=======
     prueba.arg3 = 999;
     prueba.arg4 = 56;
     
 	//printf("%s%d\n","posicion serial: ", serial_binsearch(arreglo,0,999999,500000));
 	printf("%s: %d\n","Se encuentra en la posicion: ",parallel_binsearch(&prueba));
 	//pthread_t serial, parallel;
->>>>>>> 0886d62cfb991790d036cb222fbf02bd1fb0407f
+
 	//pthread_create(&serial, NULL, (serial_binsearch), NULL); // El ultimo parametro esta por ver porque son los argumento de la fn
 	//pthread_create(&parallel, NULL, (parallel_binsearch), );//Lo mismo de arriba
 	//pthread_join(serial, NULL);
