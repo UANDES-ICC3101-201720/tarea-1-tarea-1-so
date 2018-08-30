@@ -14,6 +14,8 @@
 #include "util.h"
 #define _POSIX_C_Source 2
 
+int *numero = 0;
+
 // TODO: implement
 struct arg_struct{
 	int arg2;
@@ -25,8 +27,13 @@ int serial_binsearch(int arr[], int l, int r, int x) {
 	if(r>=1){
 		int mid = l +(r-l)/2;
 		if(arr[mid] == x) return mid;
-		if(arr[mid]>x) return serial_binsearch(arr, l, mid-1, x);
+		if(arr[mid]>x) {
+			printf("izq\n");
+			return serial_binsearch(arr, l, mid-1, x);
+			}
+		printf("der\n");
 		return serial_binsearch(arr, mid+1, r, x);
+			
 	}
     return 0;
 }
@@ -35,11 +42,19 @@ int serial_binsearch(int arr[], int l, int r, int x) {
 int parallel_binsearch(void * arguments) {
 
 	struct arg_struct *args = arguments;
+<<<<<<< HEAD
 	printf("%s%d\n", "arg2", args->arg2);
     printf("%s%d\n", "arg3", args->arg3);
     printf("%s%d\n", "arg4", args->arg4);
+=======
+	//printf("%s%d\n", "arg2: ", args->arg2);
+	//printf("%s%d\n", "arg3: ", args->arg3);
+	//printf("%s%d\n", "arg4: ", args->arg4);
+	printf("________________\n");
+>>>>>>> 0886d62cfb991790d036cb222fbf02bd1fb0407f
 	if (args->arg3>=1){
 		int mid = args->arg2 + (args->arg3-1)/2;
+		printf("%s%d\n","mid: ",mid);
 		struct arg_struct args1;
 		args1.arg1 = args->arg1;
 		args1.arg2 = args->arg2;
@@ -51,18 +66,23 @@ int parallel_binsearch(void * arguments) {
 		args2.arg2 = mid+1;
 		args2.arg3 = args->arg3;
 		args2.arg4 = args->arg4;
-		if(args->arg1[mid]!=args->arg4){
+		if(((args->arg1)[mid]) != (args->arg4)){
 			pthread_t thread1, thread2;
 			pthread_create(&thread1, NULL, parallel_binsearch, &args1);
 			pthread_create(&thread2, NULL, parallel_binsearch, &args2);
 		}
+<<<<<<< HEAD
 		if(args->arg1[mid] == args->arg4) return mid;
 		return 0;
+=======
+		if((args->arg1)[mid] == (args->arg4)) return mid;
+>>>>>>> 0886d62cfb991790d036cb222fbf02bd1fb0407f
 	}
     
 }
 
 int main(int argc, char** argv) {
+
     /* TODO: move this time measurement to right before the execution of each binsearch algorithms
      * in your experiment code. It now stands here just for demonstrating time measurement. */
     int experiments = 0 ;
@@ -106,6 +126,7 @@ int main(int argc, char** argv) {
 	printf("%d %d %d\n",t, experiments, position);
 
     /* TODO: start datagen here as a child process. */
+    /*
     int dtgnid = fork();
     
     if(dtgnid > 0){
@@ -116,23 +137,32 @@ int main(int argc, char** argv) {
     else if (dtgnid<0){
     	fprintf(stderr, "%s\n", "Can't create Datagen as child process");
     }
-
+	*/
     /* TODO: implement code for your experiments using data provided by datagen and your
      * serial and parallel versions of binsearch.
      * */
-
+    printf("%s\n", "hola");
     struct arg_struct prueba;
-    int arreglo[1000];
-    for (int i =0; i<1000;i++){
-    	arreglo[i]=i;
+    int arreglo[100];
+    for (int i =0; i<100;i++){
+    	arreglo[i]=i+1;
     }
     prueba.arg1 = arreglo;
     prueba.arg2 = 0;
+<<<<<<< HEAD
     prueba.arg3 =999;
     prueba.arg4 = 708;
     
     printf("%s: %d\n","Se encuentra en la posicion:",parallel_binsearch(&prueba));
 	pthread_t serial, parallel;
+=======
+    prueba.arg3 = 999;
+    prueba.arg4 = 56;
+    
+	//printf("%s%d\n","posicion serial: ", serial_binsearch(arreglo,0,999999,500000));
+	printf("%s: %d\n","Se encuentra en la posicion: ",parallel_binsearch(&prueba));
+	//pthread_t serial, parallel;
+>>>>>>> 0886d62cfb991790d036cb222fbf02bd1fb0407f
 	//pthread_create(&serial, NULL, (serial_binsearch), NULL); // El ultimo parametro esta por ver porque son los argumento de la fn
 	//pthread_create(&parallel, NULL, (parallel_binsearch), );//Lo mismo de arriba
 	//pthread_join(serial, NULL);
