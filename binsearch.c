@@ -169,6 +169,7 @@ int main(int argc, char** argv) {
     int position = 0;
     int c;
     clock_t cbegin = clock();
+    char charT= "";
 
     printf("[binsearch] Starting up...\n");
 
@@ -182,8 +183,10 @@ int main(int argc, char** argv) {
     	switch(c){
     		perror("[datagen] Bind error.\n");
 			case 'T':
+
 			t = atoi(optarg);
 			if(t<3 || t>9){
+				strcpy(charT, optarg);
 				fprintf(stderr, "%s\n", "T must be betweeen 3 and 9");
 				return 0;
 			}
@@ -247,29 +250,58 @@ int main(int argc, char** argv) {
 	if((r= connect(fd, (struct sockaddr*)&addr, sizeof(addr)))==-1)
 		perror("Binsearch no se pudo conectar");
 
-	char instruction[10]= "BEGIN S 6";
-	
+
+//Aqui comienza la generacion de datos en base a los flags
+	char instruction[]= "BEGIN S 6";
+
 
 	
 	write(fd, instruction, 10);
-	UINT* buf = malloc(sizeof(UINT)*1000);
-	size_t size = pow(10, t);
-    UINT* arreglo = malloc(sizeof(UINT) * size);
-    UINT index = 0;
-	while(read(fd, buf, sizeof(buf))>0){
-		for(int i=0;i<1000;i++){
-			arreglo[index]=buf[i];
-			index++;;
-		}
+	/*
+	UINT readvalues = 0;
+	size_t numvalues = pow(10, 6);
+	size_t readbytes = 0;
 
+	UINT *readbuf = malloc(sizeof(UINT) * numvalues);
+
+	while (readvalues < numvalues) {
+	    readbytes = read(fd, readbuf + readvalues, sizeof(UINT) * 1000);
+	    readvalues += readbytes / 4;
 	}
-	
 
-		
+	UINT arreglo[1000000];
+
+	UINT * index = readbuf[0];
+	for(size_t i = 0; i<numvalues; i++){
+		arreglo[i]= index + i;
+		printf("%lu\n", arreglo[i]);
+	}
+
+	free(readbuf);
 	
-				
+	if(write(fd, DATAGEN_END_CMD, sizeof(DATAGEN_END_CMD)) == -1){
+		perror("[Binsearch]Datagen not terminated");
+	} */
+
+
 
 	
+	UINT readvalues = 0;
+	size_t numvalues = pow(10, 8);
+	size_t readbytes = 0;
+
+	UINT *readbuf = malloc(sizeof(UINT) * numvalues);
+
+	while (readvalues < numvalues) {
+	    /* read the bytestream */
+	    readbytes = read(fd, readbuf + readvalues, sizeof(UINT) * 1000);
+	    readvalues += readbytes / 4;
+	}
+
+	if(write(fd, DATAGEN_END_CMD, sizeof(DATAGEN_END_CMD)) ==-1)
+		perror("Cant stop datagen");
+
+	exit(0);
 
 
 	
