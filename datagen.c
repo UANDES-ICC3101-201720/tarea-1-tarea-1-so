@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
             continue;
         }
 
-        while ( (rc=read(cl,buf,sizeof(buf))) > 0) { //Aqui envia las cosas
+        while ( (rc=read(cl,buf,sizeof(buf))) > 0) { //Aqui lee las cosas
             char cmd[6], sflag;
             int tvalue;
             int toks = sscanf(buf, DATAGEN_BEGIN_CMD_FMT, cmd, &sflag, &tvalue);

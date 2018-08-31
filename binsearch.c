@@ -252,21 +252,26 @@ int main(int argc, char** argv) {
 
 	
 	write(fd, instruction, 10);
-	int buf[100];
-	while((rs = read(fd, buf, sizeof(buf)))>0){
-		char cmd[4];
-		int respns = sscanf(buf, "%s\n\n",cmd );
-		if(strstr(respns, DATAGEN_OK_RESPONSE)){
-			break;
+	UINT* buf = malloc(sizeof(UINT)*1000);
+	size_t size = pow(10, t);
+    UINT* arreglo = malloc(sizeof(UINT) * size);
+    UINT index = 0;
+	while(read(fd, buf, sizeof(buf))>0){
+		for(int i=0;i<1000;i++){
+			arreglo[index]=buf[i];
+			index++;;
 		}
+
+	}
+	
+
 		
-	}
-	UINT buff[1000];
+	
+				
 
-	while((rs = read(fd, buff, sizeof(buff)))>0){
+	
 
-			
-	}
+
 	
 		
 		
