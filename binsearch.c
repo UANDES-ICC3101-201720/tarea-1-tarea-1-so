@@ -210,14 +210,24 @@ int main(int argc, char** argv) {
 
     int dtgnid = fork();
     
+    
+
     if(dtgnid == 0){
     	printf("%s%d\n","Datagen PID: ", getpid());
-    	char * name= "./datagen";
-    	execvp(name, &name);
+    	char * myargs[3];
+    	myargs[0] = "./datagen";
+    	myargs[1] = "inicio";
+    	myargs[2] = NULL;
+    	execvp(myargs[0], myargs);
     }
+    else if(dtgnid>0){
+    	printf("%s%d\n", "Bnsearch PID: ", getpid());
+    }
+
     else if (dtgnid<0){
     	fprintf(stderr, "%s\n", "Can't create Datagen as child process");
     }
+    printf("%s%d\n","hola: ", getpid() );
 	
     /* TODO: implement code for your experiments using data provided by datagen and your
      * serial and parallel versions of binsearch.
@@ -233,20 +243,13 @@ int main(int argc, char** argv) {
 	addr.sun_family = AF_UNIX;
 	strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path));
 
+	int r;
+	if((r= connect(fd, (struct sockaddr*)&addr, sizeof(addr)))==-1)
+		perror("Binsearch no se pudo conectar");
 
-	int re = connect(fd, (struct sockaddr*)&addr, sizeof(addr));
-
-	while(re == -1)
-		re = connect(fd, (struct sockaddr*)&addr, sizeof(addr));
-		
-
-	/*
-	char instruction[10];
-	sprintf(instruction, "BEGIN S %d", t);
+	char instruction[10]= "BEGIN S 6";
 	
-	for (int e = 0; e<experiments;e++){
-		
-	}
+
 	
 	write(fd, instruction, 10);
 	int buf[100];
@@ -264,7 +267,7 @@ int main(int argc, char** argv) {
 
 			
 	}
-	*/
+	
 		
 		
 		

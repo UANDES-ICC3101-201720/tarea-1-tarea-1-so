@@ -53,6 +53,7 @@ UINT* generate_values(UINT T, bool sorted) {
 }
 
 int main(int argc, char** argv) {
+    printf("%s%d\n", "[datagen] pid:", getpid() );
     struct sockaddr_un addr;
     char buf[100];
     int fd,cl,rc;
