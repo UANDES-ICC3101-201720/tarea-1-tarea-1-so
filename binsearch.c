@@ -25,6 +25,8 @@ struct arg_struct{
 	int* arg1;
 };
 
+
+
 typedef struct arg_struct2{
 	int argL;
 	int argR;
@@ -179,20 +181,47 @@ int main(int argc, char** argv) {
 
     prueba.arg3 =999;
     prueba.arg4 = 708;
-    printf("%s: %d\n","Se encuentra en la posicion:",parallel_binsearch(&prueba));
+    //printf("%s: %d\n","Se encuentra en la posicion:",parallel_binsearch(&prueba));
 	pthread_t serial, parallel;
     prueba.arg3 = 999;
     prueba.arg4 = 56;
 
     
 	//printf("%s%d\n","posicion serial: ", serial_binsearch(arreglo,0,99,81));
-	printf("Se encuentra en la posicion: %d\n",parallel_binsearch(&prueba));
+	//printf("Se encuentra en la posicion: %d\n",parallel_binsearch(&prueba));
 	//pthread_t serial, parallel;
 
 	//pthread_create(&serial, NULL, (serial_binsearch), NULL); // El ultimo parametro esta por ver porque son los argumento de la fn
 	//pthread_create(&parallel, NULL, (parallel_binsearch), );//Lo mismo de arriba
 	//pthread_join(serial, NULL);
 	//pthread_join(parallel, NULL);
+
+
+	struct sockaddr_un addr;
+	int fd, rc;
+
+	fd = socket(AF_UNIX, SOCK_STREAM, 0);
+	if (fd ==-1) perror("[binsearch] Error creating socket. \n");
+
+	memset(&addr, 0, sizeof(struct sockaddr_un));
+	addr.sun_family = AF_UNIX;
+	strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path)-1);
+
+	if(connect(fd, (struct sockaddr_un *) &addr, sizeof(struct sockaddr_un)) == -1) 
+		perror("[binsearch] Error connecting to the socket");
+
+
+	char instruction[10];
+	sprintf(instruction, "BEGIN S %d", t);
+	
+	for (int e = 0; e<experiments;i++){
+		
+	}
+	
+
+	
+
+
     /* TODO: connect to datagen and ask for the necessary data in each experiment round.
      * Create a Unix domain socket with DSOCKET_PATH (see const.h).
      * Talk to datagen using the messages specified in the assignment description document.

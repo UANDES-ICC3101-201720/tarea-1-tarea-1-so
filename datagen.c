@@ -62,13 +62,13 @@ int main(int argc, char** argv) {
         exit(-1);
     }
 
-    memset(&addr, 0, sizeof(addr));
+    memset(&addr, 0, sizeof(addr)); //limpia la estructura
     addr.sun_family = AF_UNIX;
 
     strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path)-1);
-    unlink(DSOCKET_PATH);
+    unlink(DSOCKET_PATH); //Esto pone la direccion del socket
 
-    if (bind(fd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
+    if (bind(fd, (struct sockaddr*)&addr, sizeof(addr)) == -1) { //Bind crea una entrada en el
         perror("[datagen] Bind error.\n");
         exit(-1);
     }
@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
             continue;
         }
 
-        while ( (rc=read(cl,buf,sizeof(buf))) > 0) {
+        while ( (rc=read(cl,buf,sizeof(buf))) > 0) { //Aqui envia las cosas
             char cmd[6], sflag;
             int tvalue;
             int toks = sscanf(buf, DATAGEN_BEGIN_CMD_FMT, cmd, &sflag, &tvalue);
