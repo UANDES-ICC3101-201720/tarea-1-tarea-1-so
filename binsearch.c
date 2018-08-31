@@ -14,61 +14,24 @@
 #include "util.h"
 #define _POSIX_C_Source 2
 
-int *numero = 0;
+
 
 // TODO: implement
 
-<<<<<<< HEAD
-struct arg_struct{
-	int arg2;
-	int arg3;
-	int arg4;
-	int* arg1;
-};
 
 
 
-typedef struct arg_struct2{
-=======
 
-/*
-int parallel_binsearch2(void *function_args){
-	struct two_args_struct *tas = function_args;
-	int buscame;
-	int *arreglo;
-	buscame = tas -> num_a_buscar;
-	arreglo = tas -> arreglo;
-	printf("buscame = %d\n", buscame);
-	int largo = sizeof(arreglo)/sizeof(int);
-	int arr_izq[largo/2];
-	int arr_der[largo/2];
-	for (int i = 0; i < largo/2; i++){
-		arr_izq[i] = arreglo[i];
-		arr_der[i] = arreglo[i+(largo/2)];
-	}
-}*/
+
 
 typedef struct args_struct {
->>>>>>> a13c484754cabcd8f89062fbf804aa642570b63b
+
 	int argL;
 	int argR;
 	int argX;
 	int *arg_arreglo;
 } as_type;
 
-/*
-int serial_binsearch(int arr[], int l, int r, int x) {
-	if(r >= 1){
-		int mid = l + (r-l)/2;
-		printf("mid = %d\n", mid);
-		if(arr[mid] == x) return mid;
-		if(arr[mid] > x) {
-			return serial_binsearch(arr, l, mid-1, x);
-			}
-		return serial_binsearch(arr, mid+1, r, x);	
-	}
-	return -1;
-}*/
 
 int serial_binsearch(struct args_struct arguments) {
 	struct args_struct as = arguments;
@@ -111,7 +74,7 @@ int serial_binsearch(struct args_struct arguments) {
 	return -1;
 }
 
-int serial_binsearch_void(void *argumentos){
+int serial_binsearch_void (void *argumentos){
 	as_type *as = (as_type *) argumentos;
 	int l = as->argL;
 	int r = as->argR;
@@ -239,12 +202,9 @@ int main(int argc, char** argv) {
 	printf("%d %d %d\n",t, experiments, position);
 
 
-	//int cantidad_de_nucleos = sysconf(_SC_NPROCESSORS_ONLN);
-	//int largo = 100;
-	//printf("Se crean %d arreglos de largo %d c/u.\n", cantidad_de_nucleos, largo/(cantidad_de_nucleos));
-	//printf("%d\n", cantidad_de_nucleos*(largo/(cantidad_de_nucleos)));
+	
     /* TODO: start datagen here as a child process. */
-    /*
+    
     int dtgnid = fork();
     
     if(dtgnid == 0){
@@ -255,52 +215,12 @@ int main(int argc, char** argv) {
     else if (dtgnid<0){
     	fprintf(stderr, "%s\n", "Can't create Datagen as child process");
     }
-	*/
+	
     /* TODO: implement code for your experiments using data provided by datagen and your
      * serial and parallel versions of binsearch.
      * */
+
 	
-    int arreglo[100];
-    for (int i = 0; i < 100; i++) {
-    	arreglo[i] = i;
-    }
-	//printf("%d\n",sizeof(arreglo)/sizeof(int));
-
-    struct args_struct as;
-	as.argL = 0;
-	as.argR = 99;
-	as.argX = 74;
-	as.arg_arreglo = arreglo;
-
-<<<<<<< HEAD
-    prueba.arg3 =999;
-    prueba.arg4 = 708;
-    //printf("%s: %d\n","Se encuentra en la posicion:",parallel_binsearch(&prueba));
-	pthread_t serial, parallel;
-    prueba.arg3 = 999;
-    prueba.arg4 = 56;
-
-    
-	//printf("%s%d\n","posicion serial: ", serial_binsearch(arreglo,0,99,81));
-	//printf("Se encuentra en la posicion: %d\n",parallel_binsearch(&prueba));
-=======
-	printf("Empezando\n");
-
-	printf("posicion: %d\n", (int)parallel_binsearch(as)); 
-
-	printf("-------------------------------\n");
- 
-	
-
-	//printf("posicion serial: %d\n", serial_binsearch(as));
-
->>>>>>> a13c484754cabcd8f89062fbf804aa642570b63b
-	//pthread_t serial, parallel;
-
-	//pthread_create(&serial, NULL, (serial_binsearch), NULL); // El ultimo parametro esta por ver porque son los argumento de la fn
-	//pthread_create(&parallel, NULL, (parallel_binsearch), );//Lo mismo de arriba
-	//pthread_join(serial, NULL);
-	//pthread_join(parallel, NULL);
 
 
 	struct sockaddr_un addr;
@@ -320,7 +240,7 @@ int main(int argc, char** argv) {
 	char instruction[10];
 	sprintf(instruction, "BEGIN S %d", t);
 	
-	for (int e = 0; e<experiments;i++){
+	for (int e = 0; e<experiments;e++){
 		
 	}
 	
