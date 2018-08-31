@@ -228,7 +228,7 @@ int main(int argc, char** argv) {
 
 	memset(&addr, 0, sizeof(struct sockaddr_un));
 	addr.sun_family = AF_UNIX;
-	strncpy(addr.sun_path, "/tmp/dg.sock", sizeof(addr.sun_path)-1);
+	strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path)-1);
 
 
 
@@ -256,9 +256,16 @@ int main(int argc, char** argv) {
 	UINT buff[1000];
 
 	while((rs = read(fd, buff, sizeof(buff)))>0){
+<<<<<<< HEAD
 			
 	}
 	*/
+=======
+		
+		
+		
+	}*/
+>>>>>>> db5ff021587ef85dba2e466b223db4780f46e006
 
 
 
