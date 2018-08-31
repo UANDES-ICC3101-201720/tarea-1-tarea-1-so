@@ -263,7 +263,7 @@ int main(int argc, char** argv) {
 
 	
 	UINT readvalues = 0;
-	size_t numvalues = pow(10, 8);
+	size_t numvalues = pow(10, t);
 	size_t readbytes = 0;
 
 	UINT *readbuf = malloc(sizeof(UINT) * numvalues);
@@ -273,11 +273,9 @@ int main(int argc, char** argv) {
 	    readbytes = read(fd, readbuf + readvalues, sizeof(UINT) * 1000);
 	    readvalues += readbytes / 4;
 	}
-
 	while(write(fd, DATAGEN_END_CMD, sizeof(DATAGEN_END_CMD)) ==-1)
 		perror("Cant stop datagen");
 
-	kill(dtgnid, SIGKILL);
 
 	for(int e=0; e<experiments; e++){
 		struct timespec start1, finish1;
