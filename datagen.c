@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
     memset(&addr, 0, sizeof(addr)); //limpia la estructura
     addr.sun_family = AF_UNIX;
 
-    strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path)-1);
+    strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path));
     unlink(DSOCKET_PATH); //Esto pone la direccion del socket
 
     if (bind(fd, (struct sockaddr*)&addr, sizeof(addr)) == -1) { //Bind crea una entrada en el
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
         exit(-1);
     }
 
-    if (listen(fd, 5) == -1) {
+    if (listen(fd, 50) == -1) {
         perror("[datagen] Error listening for incoming connections.\n");
         exit(-1);
     }
@@ -92,7 +92,6 @@ int main(int argc, char** argv) {
             if (toks == 3 && strstr(cmd, "BEGIN") != NULL) {
                 printf("[datagen] Beginning value generation.\n");
                 bool sorted = sflag == 'S';
-
                 if (tvalue < 3 || tvalue > 8) {
                     perror("[datagen] Invalid T value! Aborting.\n");
                     continue;

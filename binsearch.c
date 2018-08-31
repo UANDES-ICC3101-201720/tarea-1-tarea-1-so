@@ -12,7 +12,7 @@
 #include "types.h"
 #include "const.h"
 #include "util.h"
-#define _POSIX_C_Source 2
+
 
 
 
@@ -26,26 +26,26 @@
 
 typedef struct args_struct {
 
-	int argL;
-	int argR;
-	int argX;
-	int *arg_arreglo;
+	UINT argL;
+	UINT argR;
+	UINT argX;
+	UINT *arg_arreglo;
 } as_type;
 
 
 int serial_binsearch(struct args_struct arguments) {
 	struct args_struct as = arguments;
-	int l = as.argL;
-	int r = as.argR;
-	int x = as.argX;
-	int *arr = as.arg_arreglo;
+	UINT l = as.argL;
+	UINT r = as.argR;
+	UINT x = as.argX;
+	UINT *arr = as.arg_arreglo;
 
 	if (x > arr[r]){
 		return -1;
 	}
 	
 	if(r >= 1){
-		int mid = l + (r-l)/2;
+		UINT mid = l + (r-l)/2;
 		printf("mid = %d\n", mid);
 		if(arr[mid] == x) {
 			printf("---> %d\n",mid);
@@ -74,25 +74,27 @@ int serial_binsearch(struct args_struct arguments) {
 	return -1;
 }
 
-int serial_binsearch_void (void *argumentos){
+void* serial_binsearch_void (void *argumentos){
 	as_type *as = (as_type *) argumentos;
-	int l = as->argL;
-	int r = as->argR;
-	int x = as->argX;
-	int *arr = as->arg_arreglo;
+	UINT l = as->argL;
+	UINT r = as->argR;
+	UINT x = as->argX;
+	UINT *arr = as->arg_arreglo;
 	printf("l: %d, r: %d, x: %d\n", l, r, x);
 
 	if ((x > arr[r]) || (l-r == 1) || (x < arr[x])){
-		return  -1;
+		size_t ret = -1;
+		return  (void*) ret;
 	}
 
 
 	if(r >= 1){
-		int mid = l + (r-l)/2;
+		UINT mid = l + (r-l)/2;
 		printf("mid = %d\n", mid);
 		if(arr[mid] == x) {
 			printf("---> %d\n",mid);
-			return (void *)mid;
+			size_t ret = mid;
+			return (void*) ret;
 			}
 		if(arr[mid] > x) {
 			printf("Entrando a la izquierda...\n");
@@ -113,6 +115,9 @@ int serial_binsearch_void (void *argumentos){
 			return serial_binsearch_void(&as3);	
 		}	
 	}
+
+	size_t ret = -1;
+	return (void*) ret; 
 }
 
 // TODO: implement
@@ -122,10 +127,8 @@ int serial_binsearch_void (void *argumentos){
 void * parallel_binsearch(struct args_struct arguments){
 
 	struct args_struct as = arguments;
-	int l = as.argL;
-	int r = as.argR;
-	int x = as.argX;
-	int *arr = as.arg_arreglo;
+	UINT x = as.argX;
+	UINT *arr = as.arg_arreglo;
 
 	int cantidad_nucleos = sysconf(_SC_NPROCESSORS_ONLN);
 
@@ -133,7 +136,6 @@ void * parallel_binsearch(struct args_struct arguments){
 
 
 	for (int i = 0; i < cantidad_nucleos; i++){
-		as_type as;
 		as.argL = i*cantidad_nucleos;
 		if (i != cantidad_nucleos-1){
 			as.argR = ((i+1)*cantidad_nucleos)-1;
@@ -143,17 +145,18 @@ void * parallel_binsearch(struct args_struct arguments){
 		}
 		as.argX = x;
 		as.arg_arreglo = arr;
-		int * respuesta;
+		size_t * respuesta;
 		printf("creando threads...\n");
 		pthread_create(&arreglo_threads[i], NULL, serial_binsearch_void , &as);	
 		pthread_join(arreglo_threads[i], (void **) &respuesta);
 
 		//printf("respuesta: %d\n", respuesta);
-		if (respuesta == x){
+		if (*respuesta == x){
 			return respuesta;
 		}
 	}
-	return -1;
+	size_t ret = -1;
+	return (void*) ret;
 
 }
 
@@ -204,7 +207,7 @@ int main(int argc, char** argv) {
 
 	
     /* TODO: start datagen here as a child process. */
-    
+
     int dtgnid = fork();
     
     if(dtgnid == 0){
@@ -221,19 +224,21 @@ int main(int argc, char** argv) {
      * */
 
 	struct sockaddr_un addr;
-	int fd, rs;
+	int fd;
 
 	fd = socket(AF_UNIX, SOCK_STREAM, 0);
 	if (fd ==-1) perror("[binsearch] Error creating socket. \n");
 
 	memset(&addr, 0, sizeof(struct sockaddr_un));
 	addr.sun_family = AF_UNIX;
-	strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path)-1);
+	strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path));
 
 
+	int re = connect(fd, (struct sockaddr*)&addr, sizeof(addr));
 
-	if(connect(fd, (struct sockaddr_un *) &addr, sizeof(struct sockaddr_un)) == -1) 
-		perror("[binsearch] Error connecting to the socket");
+	while(re == -1)
+		re = connect(fd, (struct sockaddr*)&addr, sizeof(addr));
+		
 
 	/*
 	char instruction[10];
@@ -256,16 +261,15 @@ int main(int argc, char** argv) {
 	UINT buff[1000];
 
 	while((rs = read(fd, buff, sizeof(buff)))>0){
-<<<<<<< HEAD
+
 			
 	}
 	*/
-=======
 		
 		
 		
-	}*/
->>>>>>> db5ff021587ef85dba2e466b223db4780f46e006
+	
+
 
 
 
