@@ -83,7 +83,7 @@ int serial_binsearch_void (void *argumentos){
 	printf("l: %d, r: %d, x: %d\n", l, r, x);
 
 	if ((x > arr[r]) || (l-r == 1) || (x < arr[x])){
-		return -1;
+		return  -1;
 	}
 
 
@@ -92,7 +92,7 @@ int serial_binsearch_void (void *argumentos){
 		printf("mid = %d\n", mid);
 		if(arr[mid] == x) {
 			printf("---> %d\n",mid);
-			return (void **)mid;
+			return (void *)mid;
 			}
 		if(arr[mid] > x) {
 			printf("Entrando a la izquierda...\n");
@@ -224,16 +224,16 @@ int main(int argc, char** argv) {
 
 
 	struct sockaddr_un addr;
-	int fd, rc;
+	int fd, rs;
 
 	fd = socket(AF_UNIX, SOCK_STREAM, 0);
 	if (fd ==-1) perror("[binsearch] Error creating socket. \n");
 
 	memset(&addr, 0, sizeof(struct sockaddr_un));
 	addr.sun_family = AF_UNIX;
-	strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path)-1);
+	strncpy(addr.sun_path, "/tmp/dg.sock", sizeof(addr.sun_path)-1);
 
-	if(connect(fd, (struct sockaddr_un *) &addr, sizeof(struct sockaddr_un)) == -1) 
+	if(connect(fd, (struct sockaddr_un*) &addr, sizeof(struct sockaddr_un)) == -1) 
 		perror("[binsearch] Error connecting to the socket");
 
 
@@ -244,8 +244,26 @@ int main(int argc, char** argv) {
 		
 	}
 	
+	write(fd, instruction, 10);
+	int buf[100];
+	while((rs = read(fd, buf, sizeof(buf)))>0){
+		char cmd[4];
+		int respns = sscanf(buf, "%s\n\n",cmd );
+		if(strstr(respns, DATAGEN_OK_RESPONSE)){
+			break;
+		}
+		
+	}
+	UINT buff[1000];
 
-	
+	while((rs = read(fd, buff, sizeof(buff)))>0){
+		
+		
+		
+	}
+
+
+
 
 
     /* TODO: connect to datagen and ask for the necessary data in each experiment round.
