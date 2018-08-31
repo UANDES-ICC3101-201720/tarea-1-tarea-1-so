@@ -9,6 +9,7 @@
 #include <time.h>
 #include <getopt.h>
 #include <pthread.h>
+#include <signal.h>
 #include "types.h"
 #include "const.h"
 #include "util.h"
@@ -168,8 +169,7 @@ int main(int argc, char** argv) {
     int t = 0;
     int position = 0;
     int c;
-    clock_t cbegin = clock();
-    char charT= "";
+    char charT[2]= "";
 
     printf("[binsearch] Starting up...\n");
 
@@ -183,10 +183,9 @@ int main(int argc, char** argv) {
     	switch(c){
     		perror("[datagen] Bind error.\n");
 			case 'T':
-
+			strcpy(charT, optarg);
 			t = atoi(optarg);
 			if(t<3 || t>9){
-				strcpy(charT, optarg);
 				fprintf(stderr, "%s\n", "T must be betweeen 3 and 9");
 				return 0;
 			}
@@ -247,41 +246,18 @@ int main(int argc, char** argv) {
 	strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path));
 
 	int r;
-	if((r= connect(fd, (struct sockaddr*)&addr, sizeof(addr)))==-1)
+	while((r= connect(fd, (struct sockaddr*)&addr, sizeof(addr)))==-1)
 		perror("Binsearch no se pudo conectar");
 
 
 //Aqui comienza la generacion de datos en base a los flags
-	char instruction[]= "BEGIN S 6";
+	char instruction[]= "BEGIN S ";
+	strcat(instruction, charT);
+
 
 
 	
 	write(fd, instruction, 10);
-	/*
-	UINT readvalues = 0;
-	size_t numvalues = pow(10, 6);
-	size_t readbytes = 0;
-
-	UINT *readbuf = malloc(sizeof(UINT) * numvalues);
-
-	while (readvalues < numvalues) {
-	    readbytes = read(fd, readbuf + readvalues, sizeof(UINT) * 1000);
-	    readvalues += readbytes / 4;
-	}
-
-	UINT arreglo[1000000];
-
-	UINT * index = readbuf[0];
-	for(size_t i = 0; i<numvalues; i++){
-		arreglo[i]= index + i;
-		printf("%lu\n", arreglo[i]);
-	}
-
-	free(readbuf);
-	
-	if(write(fd, DATAGEN_END_CMD, sizeof(DATAGEN_END_CMD)) == -1){
-		perror("[Binsearch]Datagen not terminated");
-	} */
 
 
 
@@ -298,20 +274,48 @@ int main(int argc, char** argv) {
 	    readvalues += readbytes / 4;
 	}
 
-	if(write(fd, DATAGEN_END_CMD, sizeof(DATAGEN_END_CMD)) ==-1)
+	while(write(fd, DATAGEN_END_CMD, sizeof(DATAGEN_END_CMD)) ==-1)
 		perror("Cant stop datagen");
 
-	exit(0);
+	kill(dtgnid, SIGKILL);
+
+	for(int e=0; e<experiments; e++){
+		struct timespec start1, finish1;
+		double elapsed1 = 0;
+
+		/* Get the wall clock time at start */
+		clock_gettime(CLOCK_MONOTONIC, &start1);
 
 
-	
-		
-		
-		
-	
+		/* Get the wall clock time at finish */
+		clock_gettime(CLOCK_MONOTONIC, &finish1);
+
+		/* Calculate time elapsed */
+		elapsed1 = (finish1.tv_sec - start1.tv_sec);
+		elapsed1 += (finish1.tv_nsec - start1.tv_nsec) / 1000000000.0;
+
+		/* Print the time elapsed (in seconds) */
+		printf("%lf\n", elapsed1);
+		return 0;
+
+		struct timespec start2, finish2;
+		double elapsed2 = 0;
+
+		/* Get the wall clock time at start */
+		clock_gettime(CLOCK_MONOTONIC, &start2);
 
 
+		/* Get the wall clock time at finish */
+		clock_gettime(CLOCK_MONOTONIC, &finish2);
 
+		/* Calculate time elapsed */
+		elapsed2 = (finish2.tv_sec - start2.tv_sec);
+		elapsed2 += (finish2.tv_nsec - start2.tv_nsec) / 1000000000.0;
+
+		/* Print the time elapsed (in seconds) */
+		printf("%lf\n", elapsed2);
+		return 0;
+	}
 
 
     /* TODO: connect to datagen and ask for the necessary data in each experiment round.
@@ -322,12 +326,7 @@ int main(int argc, char** argv) {
      * */
 
     /* Probe time elapsed. */
-    clock_t cend = clock();
 
-    // Time elapsed in miliseconds.
-    double time_elapsed = ((double) (cend - cbegin) / CLOCKS_PER_SEC) * 1000;
-
-    printf("Time elapsed '%lf' [ms].\n", time_elapsed);
 
     exit(0);
 }
