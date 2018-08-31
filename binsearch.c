@@ -231,12 +231,12 @@ int main(int argc, char** argv) {
 
 	memset(&addr, 0, sizeof(struct sockaddr_un));
 	addr.sun_family = AF_UNIX;
-	strncpy(addr.sun_path, "/tmp/dg.sock", sizeof(addr.sun_path)-1);
+	strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path)-1);
 
 	if(connect(fd, (struct sockaddr_un*) &addr, sizeof(struct sockaddr_un)) == -1) 
 		perror("[binsearch] Error connecting to the socket");
 
-
+	/*
 	char instruction[10];
 	sprintf(instruction, "BEGIN S %d", t);
 	
@@ -260,7 +260,7 @@ int main(int argc, char** argv) {
 		
 		
 		
-	}
+	}*/
 
 
 
