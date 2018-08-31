@@ -233,17 +233,11 @@ int main(int argc, char** argv) {
 	addr.sun_family = AF_UNIX;
 	strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path)-1);
 
+
 	if(connect(fd, (struct sockaddr_un *) &addr, sizeof(struct sockaddr_un)) == -1) 
 		perror("[binsearch] Error connecting to the socket");
 
 
-	char instruction[10];
-	sprintf(instruction, "BEGIN S %d", t);
-	
-	for (int e = 0; e<experiments;e++){
-		
-	}
-	
 
 	
 
