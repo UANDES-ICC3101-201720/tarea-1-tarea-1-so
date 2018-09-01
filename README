@@ -5,7 +5,57 @@ Integrantes:
 Descripcion del algoritmo:
 
 Parallel_Binsearch:
-El algoritmo utilizado consiste en dividir el arreglo entregado en partes iguales, la cantidad depende de los nucleos de CPU disponibles. 
+El algoritmo utilizado consiste en dividir el arreglo entregado en partes iguales y correr serial binsearch en cada uno de los threads, la cantidad depende de los nucleos de CPU disponibles.  
+A la funcion se le entrega una estructura que contiene:
+argX=Valor buscado
+argL=Valor izquierdo: Se utiliza para saber hasta donde tiene que revisar la funcion en el sub arreglo
+por el lado izquierdo
+argR= Valor Derecho: Se utiliza para saber hasta donde tiene que revisar la funcion en el sub arreglo por el lado derecho
+arr= Arreglo de numeros
+T= Largo del arreglo
 
-PseudoCodigo: 
+parallel_binsearch(arguments){
+
+	x = arguments.argX;
+	arr = arguments.arg_arreglo;
+	T = arguments.T;
+
+	cantidad_nucleos = system_conf(_SC_NPROCESSORS_ONLN);
+
+	arreglo_threads[cantidad_nucleos];
+ 	tamano_sub_arr = 10^t/cantidad_nucleos;
+    
+
+	for (int i = 0; i < cantidad_nucleos; i++){
+		arguments.argL = i*size_sub_arr;
+		if (i != size_sub_arr-1){
+			arguments.argR = ((i+1)*tamano_sub_arr)-1;
+		}
+		else {
+			as.argR = 10^T;
+		}
+		arguments.argX = x;
+		arguments.arg_arreglo = arr;
+		size_t * respuesta;
+		crear_thread(&arreglo_threads[i], NULL, serial_binsearch_void, &arguments) != 0);
+			
+		}	
+		esperar_thread(arreglo_threads[i], (void **) &respuesta);
+
+		if (*respuesta == x){
+			return respuesta;
+		}
+	}
+	size_t ret = -1;
+	return (void*) ret;
+
+}
+
+Para esta funcion se utiliza otra llamada serial_binsearch la cual es llamada al momento de crear el thread. 
+
+
+
+
+
+
 

@@ -329,5 +329,6 @@ int main(int argc, char** argv) {
     /* Probe time elapsed. */
 
 	free(readbuf);
+	close(fd);
     exit(0);
 }
