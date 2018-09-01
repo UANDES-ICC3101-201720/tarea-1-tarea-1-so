@@ -14,14 +14,7 @@
 #include "util.h"
 
 
-
-
 // TODO: implement
-
-
-
-
-
 
 
 typedef struct args_struct {
@@ -29,6 +22,7 @@ typedef struct args_struct {
 	UINT argL;
 	UINT argR;
 	UINT argX;
+	UINT T;
 	UINT *arg_arreglo;
 } as_type;
 
@@ -46,13 +40,13 @@ int serial_binsearch(struct args_struct arguments) {
 	
 	if(r >= 1){
 		UINT mid = l + (r-l)/2;
-		printf("mid = %d\n", mid);
+		//printf("mid = %d\n", mid);
 		if(arr[mid] == x) {
-			printf("---> %d\n",mid);
+			//printf("---> %d\n",mid);
 			return mid;
 			}
 		if(arr[mid] > x) {
-			printf("Entrando a la izquierda...\n");
+			//printf("Entrando a la izquierda...\n");
 			struct args_struct as2;
 			as2.argL = l;
 			as2.argR = mid-1;
@@ -61,7 +55,7 @@ int serial_binsearch(struct args_struct arguments) {
 			return serial_binsearch(as2);
 			}
 		else{
-			printf("Entrando a la derecha...\n");
+			//printf("Entrando a la derecha...\n");
 			struct args_struct as3;
 			as3.argL = mid+1;
 			as3.argR = r;
@@ -80,7 +74,7 @@ void* serial_binsearch_void (void *argumentos){
 	UINT r = as->argR;
 	UINT x = as->argX;
 	UINT *arr = as->arg_arreglo;
-	printf("l: %d, r: %d, x: %d\n", l, r, x);
+	//printf("l: %d, r: %d, x: %d\n", l, r, x);
 
 	if ((x > arr[r]) || (l-r == 1) || (x < arr[x])){
 		size_t ret = -1;
@@ -90,14 +84,14 @@ void* serial_binsearch_void (void *argumentos){
 
 	if(r >= 1){
 		UINT mid = l + (r-l)/2;
-		printf("mid = %d\n", mid);
+		//printf("mid = %d\n", mid);
 		if(arr[mid] == x) {
-			printf("---> %d\n",mid);
+			//printf("---> %d\n",mid);
 			size_t ret = mid;
 			return (void*) ret;
 			}
 		if(arr[mid] > x) {
-			printf("Entrando a la izquierda...\n");
+			//printf("Entrando a la izquierda...\n");
 			struct args_struct as2;
 			as2.argL = l;
 			as2.argR = mid-1;
@@ -106,7 +100,7 @@ void* serial_binsearch_void (void *argumentos){
 			return serial_binsearch_void(&as2);
 			}
 		else{
-			printf("Entrando a la derecha...\n");
+			//printf("Entrando a la derecha...\n");
 			struct args_struct as3;
 			as3.argL = mid+1;
 			as3.argR = r;
@@ -129,29 +123,31 @@ void * parallel_binsearch(struct args_struct arguments){
 	struct args_struct as = arguments;
 	UINT x = as.argX;
 	UINT *arr = as.arg_arreglo;
+	UINT T = as.T;
 
 	int cantidad_nucleos = sysconf(_SC_NPROCESSORS_ONLN);
 
 	pthread_t arreglo_threads[cantidad_nucleos];
-
+ 	int size_sub_arr = pow(10, T)/cantidad_nucleos;
+    
 
 	for (int i = 0; i < cantidad_nucleos; i++){
-		as.argL = i*cantidad_nucleos;
-		if (i != cantidad_nucleos-1){
-			as.argR = ((i+1)*cantidad_nucleos)-1;
+		as.argL = i*size_sub_arr;
+		if (i != size_sub_arr-1){
+			as.argR = ((i+1)*size_sub_arr)-1;
 		}
 		else {
-			as.argR = 100;
+			as.argR = pow(10, T);
 		}
 		as.argX = x;
 		as.arg_arreglo = arr;
 		size_t * respuesta;
-		printf("creando threads...\n");
-		pthread_create(&arreglo_threads[i], NULL, serial_binsearch_void , &as);	
+		printf("Creando el thread numero %d...\n", i+1);
+		pthread_create(&arreglo_threads[i], NULL, serial_binsearch_void, &as);	
 		pthread_join(arreglo_threads[i], (void **) &respuesta);
 
 		//printf("respuesta: %d\n", respuesta);
-		if (*respuesta == x){
+		if (respuesta == x){
 			return respuesta;
 		}
 	}
@@ -161,6 +157,25 @@ void * parallel_binsearch(struct args_struct arguments){
 }
 
 int main(int argc, char** argv) {
+
+	int arreglo[10000];
+	for (int i = 0; i < 10000; i++){
+		arreglo[i] = i;
+	}
+
+
+	as_type estructura;
+	estructura.argL = 0;
+	estructura.argR = 9999;
+	estructura.argX = 9997;
+	estructura.T = 4;
+	estructura.arg_arreglo = arreglo;
+	
+	printf("PARALLEL BINSEARCH:\n");
+	printf("Posicion encontrada: %d\n", parallel_binsearch(estructura));
+	printf("SERIAL BINSEARCH:\n");
+	printf("Posicion encontrada: %d\n", serial_binsearch(estructura));
+
 
     /* TODO: move this time measurement to right before the execution of each binsearch algorithms
      * in your experiment code. It now stands here just for demonstrating time measurement. */
