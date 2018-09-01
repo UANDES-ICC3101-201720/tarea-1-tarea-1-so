@@ -2,7 +2,7 @@ Integrantes:
 	Ignacio Figueroa
 	Vicente Correa
 
-Descripcion del algoritmo:
+Descripcion del algoritmo
 
 Parallel_Binsearch:
 El algoritmo utilizado consiste en dividir el arreglo entregado en partes iguales y correr serial binsearch en cada uno de los threads, la cantidad depende de los nucleos de CPU disponibles.  
@@ -54,8 +54,36 @@ parallel_binsearch(arguments){
 Para esta funcion se utiliza otra llamada serial_binsearch la cual es llamada al momento de crear el thread. 
 
 
+Analisis de resultados
+
+Lamentablemente, debido a que no pudimos hacer las mediciones con la implementación del programa, tenemos la sospecha de que el algortmo paralelo no será más optimo que el serial. La explicación de esto se encuentra en las conclusiones 
+
+Conclusiones:
+Como podemos observar, a medida que aumentamos el valor de T, es decir, la cantidad del conjunto de valores para el experimento, el tiempo que se demora en obtener los resultados es mayor, ya que se generan muchos más datos y a la vez los algoritmos deben recorrer arreglos más largos, lo que les toma más tiempo. 
+Por otro lado, a pesar de que ambos algoritmos se demoran muy poco en ejecutar, hay leves diferencias milimétricas entre los dos. En general, el algoritmo binsearch en paralelo toma un poco más de tiempo en terminar.
+La diferencia en los tiempos de ejecucion se deben a que, al momento de crear los threads, se introduce el tiempo de ejecución del context switch, el cual para cambiar de proceso, debe guardar los registros del programa actual y cargar los registros del programa a ejecutar
+Lo anterior queda respaldado en el hecho de que la relación entre los dos tiempos de completitud es similar para las dos formas distintas de medir. Es decir, que en general, tanto usando la función clock() -que mide el tiempo de CPU usado por el proceso- como la función clock_gettime() -que mide el tiempo cronológico- el algoritmo en paralelo tenía un tiempo de ejecución ligeramente mayor que el algorito binsearch implementado de forma serial.
+
+Problemas encontrados y limitaciones 
+
+Debido a las limitaciones que se nos presentaron durante la implementacion del programa, no pudimos terminar completamente esta tarea. Dentro de los problemas que mas nos consumieron tiempo se encuentran la conexión del unix domain socket para el traspaso de datos y la recuperación de los datos recibidos a traves del unix domain socket. Ambos problemas se desarrollan en detalle a continuación: 
+
+	1. Conexión del UDS: Debido a la poca documentación que teniamos acerca de como conectar los 		   sockets, perdimos mucho tiempo realizando esto. En especial, hubo un momento en el cual, 		   inicialmente, el programa lograba conectar el socket pero luego, con el mismo codigo, esto 		   ya no era posible y tiraba errores como "No such file or directory" y "Refused conection". 		   Hicimos las preguntas pertinentes al caso al profesor Claudio Alvarez mediante email y 		   luego de recibir su respuesta y de revisar documentación y nuestros código, llegamos a que 		   era problema de la creación del proceso hijo "Datagen.c" el cual tenía un PID igual al de 		   "binsearch.c". Luego de solucionar este problema, se pudo continuar con la implementación 		   del programa.
+
+	2. Recuperación de datos: Al momento de recibir los datos que nos generaba datagen tuvimos 		   problemas con la implementación del programa, en especifico, para valores de T>4 el 		   programa se quedaba colgado y los datos de Datagen no seguian siendo escribidos en el 		   socket. Entramos en la suposición de que se debió a un problema de buffer acotado en el 		   cual el cliente "binsearch.c" no estaba leyendo los datos lo suficientemente rapido 		   entonces el programa se colgaba. Logramos solucionar esto gracias al código que 		   proporcionó el profesor en la plataforma CANVAS, lo cual hizo darnos cuenta de que el 		   problema efectivamente se encontraba en el tamano del buffer. 
+
+Nuestro programa finalmente cumple las siguientes tareas:
+
+-Parsear los argumentos con getopt.
+-Crear el proceso hijo mediante fork().
+-Ejecutar "Datagen" en el programa hijo.
+-Crear un socket con la dirección entregada en "const.h"
+-Conectarse al socket creado por Datagen: Esto es gracias al Bind() que realiza Datagen.
+-Generar la instrucción de inicio con el valor de T entregado al momento de ejecutar binsearch y entregarselo a datagen para que comienze la generacion de datos
+-Leer los datos escritos por datagen en el socket por medio de un buffer.
 
 
+Aqui, al momento de intentar calcular los tiempos de ejecución de los algoritmos es cuando nuestro programa no funciona como debería. Esto se puede deber a la mala implementación de los algoritmos o algun error en el socket. 
 
 
 
