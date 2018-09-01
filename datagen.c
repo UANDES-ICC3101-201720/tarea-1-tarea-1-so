@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
             char cmd[6], sflag;
             int tvalue;
             int toks = sscanf(buf, DATAGEN_BEGIN_CMD_FMT, cmd, &sflag, &tvalue);
-            printf("%s\n",cmd );
+            printf("%s%d\n","datagen pid", getpid() );
             if (toks == 3 && strstr(cmd, "BEGIN") != NULL) {
                 printf("[datagen] Beginning value generation.\n");
                 bool sorted = sflag == 'S';

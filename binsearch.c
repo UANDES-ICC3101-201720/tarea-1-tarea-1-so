@@ -244,7 +244,7 @@ int main(int argc, char** argv) {
 	strncpy(addr.sun_path, DSOCKET_PATH, sizeof(addr.sun_path));
 
 	int r;
-	while((r= connect(fd, (struct sockaddr*)&addr, sizeof(addr)))==-1)
+	if((r= connect(fd, (struct sockaddr*)&addr, sizeof(addr)))==-1)
 		perror("Binsearch no se pudo conectar");
 
 
@@ -265,12 +265,11 @@ int main(int argc, char** argv) {
 	    readbytes = read(fd, readbuf + readvalues, sizeof(UINT) * 1000);
 	    readvalues += readbytes / 4;
 	}
-	while(write(fd, DATAGEN_END_CMD, sizeof(DATAGEN_END_CMD)) ==-1)
+	if(write(fd, DATAGEN_END_CMD, sizeof(DATAGEN_END_CMD)) ==-1)
 		perror("Cant stop datagen");
 
 	UINT encontrar = readbuf[position];
 
-	printf("%s\n","holaa");
 	for(int e=0; e<experiments; e++){
 		struct timespec start1, finish1;
 		double elapsed1 = 0;
@@ -304,7 +303,7 @@ int main(int argc, char** argv) {
 		/* Get the wall clock time at start */
 		clock_gettime(CLOCK_MONOTONIC, &start2);
 
-		parallel_binsearch(estructura_argumentos);
+		//parallel_binsearch(estructura_argumentos);
 
 		/* Get the wall clock time at finish */
 		clock_gettime(CLOCK_MONOTONIC, &finish2);
