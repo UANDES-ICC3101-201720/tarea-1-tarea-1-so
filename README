@@ -1,0 +1,11 @@
+Integrantes: 
+	Ignacio Figueroa
+	Vicente Correa
+
+Descripcion del algoritmo:
+
+Parallel_Binsearch:
+El algoritmo utilizado consiste en dividir el arreglo entregado en partes iguales, la cantidad depende de los nucleos de CPU disponibles. 
+
+PseudoCodigo: 
+
