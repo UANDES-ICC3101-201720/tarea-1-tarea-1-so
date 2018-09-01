@@ -48,21 +48,21 @@ int serial_binsearch(struct args_struct arguments) {
 			}
 		if(arr[mid] > x) {
 			//printf("Entrando a la izquierda...\n");
-			struct args_struct as2;
-			as2.argL = l;
-			as2.argR = mid-1;
-			as2.argX = x;
-			as2.arg_arreglo = arr;
-			return serial_binsearch(as2);
+
+			as.argL = l;
+			as.argR = mid-1;
+			as.argX = x;
+			as.arg_arreglo = arr;
+			return serial_binsearch(as);
 			}
 		else{
 			//printf("Entrando a la derecha...\n");
-			struct args_struct as3;
-			as3.argL = mid+1;
-			as3.argR = r;
-			as3.argX = x;
-			as3.arg_arreglo = arr;
-			return serial_binsearch(as3);	
+
+			as.argL = mid+1;
+			as.argR = r;
+			as.argX = x;
+			as.arg_arreglo = arr;
+			return serial_binsearch(as);	
 		}
 		
 	}
@@ -143,12 +143,13 @@ void * parallel_binsearch(struct args_struct arguments){
 		as.argX = x;
 		as.arg_arreglo = arr;
 		size_t * respuesta;
-		printf("Creando el thread numero %d...\n", i+1);
-		pthread_create(&arreglo_threads[i], NULL, serial_binsearch_void, &as);	
+		if(pthread_create(&arreglo_threads[i], NULL, serial_binsearch_void, &as) != 0){
+			perror("Error creating Thread");
+		}	
 		pthread_join(arreglo_threads[i], (void **) &respuesta);
 
 		//printf("respuesta: %d\n", respuesta);
-		if (respuesta == x){
+		if (*respuesta == x){
 			return respuesta;
 		}
 	}
@@ -158,24 +159,6 @@ void * parallel_binsearch(struct args_struct arguments){
 }
 
 int main(int argc, char** argv) {
-
-	int arreglo[10000];
-	for (int i = 0; i < 10000; i++){
-		arreglo[i] = i;
-	}
-
-
-	as_type estructura;
-	estructura.argL = 0;
-	estructura.argR = 9999;
-	estructura.argX = 9997;
-	estructura.T = 4;
-	estructura.arg_arreglo = arreglo;
-	
-	printf("PARALLEL BINSEARCH:\n");
-	printf("Posicion encontrada: %d\n", parallel_binsearch(estructura));
-	printf("SERIAL BINSEARCH:\n");
-	printf("Posicion encontrada: %d\n", serial_binsearch(estructura));
 
 
     /* TODO: move this time measurement to right before the execution of each binsearch algorithms
@@ -267,16 +250,10 @@ int main(int argc, char** argv) {
 
 //Aqui comienza la generacion de datos en base a los flags
 	char instruction[]= "BEGIN S ";
-	strcat(instruction, charT);
-
-
-
-	
+	strcat(instruction, charT);	
 	write(fd, instruction, 10);
 
 
-
-	
 	UINT readvalues = 0;
 	size_t numvalues = pow(10, t);
 	size_t readbytes = 0;
@@ -291,7 +268,9 @@ int main(int argc, char** argv) {
 	while(write(fd, DATAGEN_END_CMD, sizeof(DATAGEN_END_CMD)) ==-1)
 		perror("Cant stop datagen");
 
+	UINT encontrar = readbuf[position];
 
+	printf("%s\n","holaa");
 	for(int e=0; e<experiments; e++){
 		struct timespec start1, finish1;
 		double elapsed1 = 0;
@@ -299,7 +278,7 @@ int main(int argc, char** argv) {
 		as_type estructura_argumentos;
 		estructura_argumentos.argL = 0;
 		estructura_argumentos.argR = numvalues-1;
-		estructura_argumentos.argX = 4578;
+		estructura_argumentos.argX = encontrar;
 		estructura_argumentos.arg_arreglo = readbuf;
 		estructura_argumentos.T = t;
 
@@ -349,6 +328,6 @@ int main(int argc, char** argv) {
 
     /* Probe time elapsed. */
 
-
+	free(readbuf);
     exit(0);
 }
