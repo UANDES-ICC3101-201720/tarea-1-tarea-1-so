@@ -296,9 +296,17 @@ int main(int argc, char** argv) {
 		struct timespec start1, finish1;
 		double elapsed1 = 0;
 
+		as_type estructura_argumentos;
+		estructura_argumentos.argL = 0;
+		estructura_argumentos.argR = numvalues-1;
+		estructura_argumentos.argX = 4578;
+		estructura_argumentos.arg_arreglo = readbuf;
+		estructura_argumentos.T = t;
+
 		/* Get the wall clock time at start */
 		clock_gettime(CLOCK_MONOTONIC, &start1);
 
+		serial_binsearch(estructura_argumentos);
 
 		/* Get the wall clock time at finish */
 		clock_gettime(CLOCK_MONOTONIC, &finish1);
@@ -317,6 +325,7 @@ int main(int argc, char** argv) {
 		/* Get the wall clock time at start */
 		clock_gettime(CLOCK_MONOTONIC, &start2);
 
+		parallel_binsearch(estructura_argumentos);
 
 		/* Get the wall clock time at finish */
 		clock_gettime(CLOCK_MONOTONIC, &finish2);
