@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
             char cmd[6], sflag;
             int tvalue;
             int toks = sscanf(buf, DATAGEN_BEGIN_CMD_FMT, cmd, &sflag, &tvalue);
-
+            printf("%s\n",cmd );
             if (toks == 3 && strstr(cmd, "BEGIN") != NULL) {
                 printf("[datagen] Beginning value generation.\n");
                 bool sorted = sflag == 'S';
@@ -114,12 +114,15 @@ int main(int argc, char** argv) {
                     size_t vwritten = bwritten / sizeof(UINT);
                     numvalues += vwritten;
                     remaining_values -= vwritten;
+                    printf("%d\n",remaining_values);
+                    if (remaining_values == 0)
+                        break;
                     printf("[datagen] wrote '%lu' bytes to socket. '%d' remaining bytes.\n",
                            vwritten, remaining_values);
                 }
-
                 free(pvalues);
             }
+
             else if (strstr(cmd, DATAGEN_END_CMD) != NULL) {
                 printf("[datagen] Now exiting.\n");
                 exit(0);
